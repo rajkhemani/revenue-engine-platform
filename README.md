@@ -132,7 +132,7 @@ Complete API specifications are available in [API.md](API.md).
 ### Quick Start
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/revenue-engine-platform.git
+git clone https://github.com/rajkhemani/revenue-engine-platform.git
 cd revenue-engine-platform
 
 # Build and start the application
@@ -190,6 +190,23 @@ The platform includes Horizontal Pod Autoscaler (HPA) configuration:
 - Memory target utilization: 70%
 
 Customize resource limits and requests in `k8s/deployment.yaml` based on your workload requirements.
+
+---
+
+## 🧠 Agentic AI Kanban Dashboard
+
+The Revenue Engine Platform now includes sophisticated Agentic AI workflow orchestration capabilities for parallel processing of TikTok Affiliate and Digital Products streams.
+
+For detailed documentation on the Agentic AI Kanban Dashboard including:
+- Dual-stream architecture with NVIDIA Nemotron orchestration
+- Free/OpenAPI-compatible endpoint integrations
+- Kanban board structures for both revenue streams
+- Real-time data flow and processing pipelines
+- Key metrics and monitoring capabilities
+- Implementation guidelines and deployment instructions
+- 4-week implementation roadmap
+
+Please refer to: [AGENTIC_AI_KANBAN_DASHBOARD.md](AGENTIC_AI_KANBAN_DASHBOARD.md)
 
 ---
 
@@ -291,37 +308,6 @@ Each revenue stream is implemented as a TypeScript class in the `workflows/` dir
 - Event tracking for audit trails and performance analysis
 - Configuration via environment variables
 - Extensible base classes for common functionality
-
-Example workflow structure:
-```typescript
-import { BrowserAutomationService } from '../src/services/browserAutomation.service';
-
-export class PlatformRevenueWorkflow {
-    private browser: BrowserAutomationService;
-    
-    constructor() {
-        this.browser = new BrowserAutomationService();
-    }
-    
-    async execute(): Promise<WorkflowResult> {
-        try {
-            await this.browser.initialize();
-            
-            // Platform-specific login and navigation
-            // Automated interactions and data extraction
-            // Performance optimization actions
-            // Evidence collection (screenshots, PDFs)
-            
-            return { success: true, data: /* results */ };
-        } catch (error) {
-            // Error handling and alerting
-            return { success: false, error: error.message };
-        } finally {
-            await this.browser.cleanup();
-        }
-    }
-}
-```
 
 Complete workflow templates and examples are provided in the `workflows/` directory and detailed in [REVENUE_ENGINE_SETUP.md](REVENUE_ENGINE_SETUP.md).
 
@@ -436,6 +422,7 @@ revenue-engine-platform/
 ├── .github/                  # GitHub workflows and issue templates
 ├── .gitignore               # Git exclusion rules
 ├── API.md                   # Complete API reference documentation
+├── AGENTIC_AI_KANBAN_DASHBOARD.md  # Agentic AI workflow orchestration documentation
 ├── DOCKER_RUN.md            # Detailed Docker deployment instructions
 ├── docker-compose.yml       # Docker Compose configuration
 ├── jest.config.js           # Jest testing configuration
