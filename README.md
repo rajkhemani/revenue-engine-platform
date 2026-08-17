@@ -1,6 +1,32 @@
-# Node.js Docker Example
+# Node.js Docker Example - Revenue Engine
 
-A minimal Node.js TypeScript application with Express.js, RESTful APIs, WebSocket support, and task management capabilities. This project demonstrates best practices for containerizing Node.js applications with Docker.
+A comprehensive Node.js/TypeScript application designed for automated revenue generation through API integration, browser automation, and scalable deployment.
+
+## Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Getting Started](#getting-started)
+- [Docker Deployment](#docker-deployment)
+- [Kubernetes Deployment](#kubernetes-deployment)
+- [Architecture](#architecture)
+- [API Endpoints](#api-endpoints)
+- [Browser Automation](#browser-automation)
+- [Environment Variables](#environment-variables)
+- [Revenue Engine Workflow](#revenue-engine-workflow)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Overview
+
+This project scaffolds a complete revenue generation system that combines:
+- RESTful API services for core functionality
+- Real-time updates via WebSocket
+- Persistent storage for tasks and events
+- Browser automation for handling OAuth flows and web interactions without direct APIs
+- Docker and Kubernetes configurations for scalable deployment
+- Automated workflows for 24x7 operation
 
 ## Features
 
@@ -8,43 +34,30 @@ A minimal Node.js TypeScript application with Express.js, RESTful APIs, WebSocke
 - 🔌 **RESTful APIs** - Health checks, stats, agent monitoring, task management, and event tracking
 - 💾 **Persistent Storage** - File-based JSON storage for tasks and events
 - 🌐 **WebSocket Support** - Real-time updates for connected clients
+- 🤖 **Browser Automation** - Playwright-based automation for handling OAuth flows and web interactions
 - 📦 **Docker Ready** - Optimized Dockerfile for production and development
+- 🚀 **Kubernetes Ready** - Helm charts and manifests for cloud deployment
 - 🔧 **Development Experience** - Hot reload with `tsx` watch mode
 - 📊 **Monitoring Endpoints** - Health, stats, and agent metrics
 - ⚡ **Task Management** - CRUD operations for organizing work streams
 - 📡 **Event Tracking** - Audit trail for system activities
 
-## Project Structure
-
-```
-nodejs-docker-example/
-├── src/                 # Source TypeScript files
-│   └── index.ts         # Main application entry point
-├── dist/                # Compiled JavaScript output
-├── data/                # Persistent JSON storage (tasks.json, events.json)
-├── node_modules/        # Dependencies
-├── __tests__/           # Test files (to be added)
-├── package.json         # Project metadata and scripts
-├── tsconfig.json        # TypeScript configuration
-├── Dockerfile           # Docker container definition
-├── DOCKER_RUN.md        # Detailed Docker usage guide
-└── README.md            # This file
-```
-
-## Getting Started
-
-### Prerequisites
+## Prerequisites
 
 - Node.js (v18+ recommended)
 - npm (comes with Node.js)
 - Docker (for containerization)
+- kubectl (for Kubernetes deployment)
+- A GitHub account (for OAuth flows in browser automation)
 
-### Installation
+## Getting Started
+
+### Local Development
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
-   cd nodejs-docker-example
+   git clone https://github.com/<your-username>/nodejs-docker-example-revenue-engine.git
+   cd nodejs-docker-example-revenue-engine
    ```
 
 2. Install dependencies:
@@ -52,347 +65,135 @@ nodejs-docker-example/
    npm install
    ```
 
-### Development
-
-Start the development server with hot reload:
-```bash
-npm run dev
-```
-
-The application will be available at `http://localhost:3000`
-
-### Production Build
-
-1. Build the application:
+3. Start the development server with hot reload:
    ```bash
-   npm run build
+   npm run dev
    ```
 
-2. Start the production server:
+4. The application will be available at `http://localhost:3000`
+
+### Docker Deployment
+
+1. Build the Docker image:
    ```bash
-   npm start
+   docker build -t revenue-engine .
    ```
 
-## Docker Usage
+2. Run the container:
+   ```bash
+   docker run -d -p 3000:3000 --name revenue-app revenue-engine
+   ```
 
-### Building the Image
+3. Access the application at `http://localhost:3000`
 
-```bash
-docker build -t nodejs-docker-example .
-```
+### Docker Compose
 
-### Running the Container
-
-```bash
-docker run -d -p 3000:3000 --name nodejs-app nodejs-docker-example
-```
-
-### Development with Docker (Live Reload)
+We provide a `docker-compose.yml` for easy setup:
 
 ```bash
-docker run -d -p 3000:3000 \
-  -v $(pwd)/src:/usr/src/app/src \
-  -v $(pwd)/tsconfig.json:/usr/src/app/tsconfig.json \
-  --name nodejs-dev \
-  nodejs-docker-example \
-  npm run dev
+docker-compose up -d
 ```
 
-For detailed Docker instructions, see [DOCKER_RUN.md](./DOCKER_RUN.md)
+### Kubernetes Deployment
 
-## API Documentation
+1. Ensure you have a Kubernetes cluster configured.
+2. Apply the Kubernetes manifests:
+   ```bash
+   kubectl apply -f k8s/
+   ```
+3. The application will be accessible via the service defined in the manifests.
 
-### Base URL
+## Architecture
 
-```
-http://localhost:3000
-```
+The application follows a modular architecture:
+
+- **src/** - Contains the TypeScript source code
+  - **index.ts** - Main application entry point (Express server)
+  - **services/** - Business logic services (browser automation, etc.)
+- **data/** - Persistent JSON storage (tasks.json, events.json)
+- **__tests__/** - Test suites
+- **dist/** - Compiled JavaScript output (generated by build)
+- **k8s/** - Kubernetes deployment manifests
+- **docker-compose.yml** - Docker Compose configuration
+
+## API Endpoints
+
+Base URL: `http://localhost:3000`
 
 ### Health Check
-
-**GET** `/api/health`
-
-Returns application health status.
-
-**Response:**
-```json
-{
-  "status": "healthy",
-  "timestamp": "2026-08-17T10:30:00.000Z",
-  "uptime_ms": 3600000,
-  "request_count": 42,
-  "memory_usage": "45.67 MB"
-}
-```
+- `GET /api/health` - Returns application health status
 
 ### Statistics
-
-**GET** `/api/stats`
-
-Returns mock business statistics.
-
-**Response:**
-```json
-{
-  "daily_revenue": 1234,
-  "active_users": 25,
-  "conversion_rate": "4.2",
-  "total_visitors": 5678,
-  "last_updated": "2026-08-17T10:30:00.000Z"
-}
-```
+- `GET /api/stats` - Returns mock business statistics
 
 ### Agent Monitoring
-
-**GET** `/api/agents`
-
-Returns agent activity metrics for two work streams and synergy.
-
-**Response:**
-```json
-{
-  "streamA": {
-    "active": 2,
-    "idle": 1,
-    "tasks_today": 12,
-    "efficiency": "85.3"
-  },
-  "streamB": {
-    "active": 1,
-    "idle": 2,
-    "tasks_today": 7,
-    "efficiency": "90.1"
-  },
-  "synergy": {
-    "active": 1,
-    "idle": 1,
-    "tasks_today": 4,
-    "efficiency": "92.5"
-  },
-  "last_updated": "2026-08-17T10:30:00.000Z"
-}
-```
+- `GET /api/agents` - Returns agent activity metrics for two work streams and synergy
 
 ### Task Management
-
-#### Get All Tasks
-
-**GET** `/api/tasks`
-
-Returns all tasks organized by stream and column.
-
-**Response:**
-```json
-{
-  "streamA": {
-    "todo": [
-      {
-        "id": 1692300000123,
-        "title": "Sample Task",
-        "description": "Task description",
-        "createdAt": "2026-08-17T10:30:00.000Z"
-      }
-    ],
-    "in_progress": [],
-    "done": []
-  },
-  "streamB": { ... },
-  "synergy": { ... }
-}
-```
-
-#### Create Task
-
-**POST** `/api/tasks`
-
-Create a new task.
-
-**Request Body:**
-```json
-{
-  "stream": "streamA",
-  "column": "todo",
-  "task": {
-    "title": "New Task",
-    "description": "Task description"
-  }
-}
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "task": {
-    "id": 1692300000123,
-    "title": "New Task",
-    "description": "Task description",
-    "createdAt": "2026-08-17T10:30:00.000Z"
-  }
-}
-```
-
-#### Delete Task
-
-**DELETE** `/api/tasks/:stream/:column/:id`
-
-Delete a specific task.
-
-**Parameters:**
-- `stream`: stream identifier (streamA, streamB, synergy)
-- `column`: column identifier (todo, in_progress, done, etc.)
-- `id`: task ID (numeric)
-
-**Response:**
-```json
-{
-  "success": true,
-  "message": "Task deleted"
-}
-```
+- `GET /api/tasks` - Returns all tasks organized by stream and column
+- `POST /api/tasks` - Create a new task
+- `DELETE /api/tasks/:stream/:column/:id` - Delete a specific task
 
 ### Event Tracking
+- `GET /api/events` - Returns the last 50 tracked events
+- `POST /api/events` - Track a new event
 
-#### Get Recent Events
+## Browser Automation
 
-**GET** `/api/events`
+The browser automation service (located in `src/services/browserAutomation.service.ts`) provides methods for:
+- Launching a headless Chromium browser
+- Navigating to URLs
+- Interacting with elements (click, type)
+- Taking screenshots and generating PDFs
+- Proper cleanup of resources
 
-Returns the last 50 tracked events.
+**Usage Example:**
+```typescript
+import { BrowserAutomationService } from './services/browserAutomation.service';
 
-**Response:**
-```json
-[
-  {
-    "id": 1692300000123,
-    "type": "task_created",
-    "timestamp": "2026-08-17T10:30:00.000Z",
-    "data": { "taskId": 1692300000123 }
-  }
-]
-```
+const browser = new BrowserAutomationService();
 
-#### Create Event
-
-**POST** `/api/events`
-
-Track a new event.
-
-**Request Body:**
-```json
-{
-  "type": "user_action",
-  "data": { "action": "button_click", "element": "submit_button" }
+async function handleTikTokOAuth() {
+  await browser.navigateTo('https://www.tiktok.com/auth/creator/login');
+  await browser.type('#username', 'your-username');
+  await browser.type('#password', 'your-password');
+  await browser.click('#login-button');
+  await browser.takeScreenshot('./screenshots/tiktok-login.png');
 }
 ```
 
-**Response:**
-```json
-{
-  "success": true,
-  "event_id": 1692300000123,
-  "message": "Event tracked successfully"
-}
-```
-
-### WebSocket Connection
-
-Connect to the WebSocket server for real-time updates.
-
-**URL:** `ws://localhost:3000`
-
-**Message Types:**
-- `initial_agents`: Sent on connection with initial agent data
-- `agents_update`: Sent every 5 seconds with updated agent metrics
-
-**Example:**
-```javascript
-const ws = new WebSocket('ws://localhost:3000');
-
-ws.onmessage = (event) => {
-  const data = JSON.parse(event.data);
-  console.log('Received:', data);
-};
-
-ws.onopen = () => {
-  console.log('Connected to WebSocket server');
-};
-```
+This service is initialized when the server starts and cleaned up on graceful shutdown.
 
 ## Environment Variables
 
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `PORT` | Port number for the server | `3000` |
+| `PUPPETEER_EXECUTABLE_PATH` | Path to Chromium executable (set automatically in Docker) | `/usr/bin/chromium-browser` |
 
-## npm Scripts
+## Revenue Engine Workflow
 
-| Script | Description |
-|--------|-------------|
-| `npm run build` | Compile TypeScript to JavaScript (outputs to dist/) |
-| `npm start` | Run the compiled application (Node.js server) |
-| `npm run dev` | Start development server with tsx watch (auto-restarts on changes) |
-| `npm test` | Run tests (requires test setup) |
+This system is designed to automate revenue generation through:
 
-## Configuration
+1. **Task Management**: Organize revenue-generating activities (content creation, ad campaigns, affiliate marketing)
+2. **Event Tracking**: Monitor key conversions and revenue events
+3. **Browser Automation**: Handle platform-specific OAuth flows and web interactions (TikTok, Shopify, Meta, etc.)
+4. **Real-time Updates**: WebSocket connections provide live dashboards for monitoring performance
+5. **Scalable Deployment**: Docker and Kubernetes enable horizontal scaling for high-volume operations
 
-### TypeScript
+**Typical Revenue Flow:**
+1. Use browser automation to log into advertising platforms
+2. Create and launch campaigns via automated web interactions
+3. Track conversion events through the `/api/events` endpoint
+4. Monitor performance in real-time via WebSocket updates
+5. Adjust strategies based on collected analytics
 
-See `tsconfig.json` for TypeScript compiler options.
+## Troubleshooting
 
-### Data Storage
-
-The application stores data in JSON files located in the `data/` directory:
-- `tasks.json`: Task management data
-- `events.json`: Event tracking data
-
-These files are automatically created if they don't exist.
-
-## Testing
-
-To add tests to this project:
-
-1. Install testing dependencies:
-   ```bash
-   npm install -D jest @types/jest ts-jest
-   ```
-
-2. Create test files in the `__tests__` directory
-
-3. Add test script to package.json:
-   ```json
-   "test": "jest"
-   ```
-
-## Deployment
-
-### Docker Deployment
-
-See [DOCKER_RUN.md](./DOCKER_RUN.md) for detailed Docker deployment instructions.
-
-### Manual Deployment
-
-1. Build the application:
-   ```bash
-   npm run build
-   ```
-
-2. Start the server:
-   ```bash
-   npm start
-   ```
-
-3. For production use, consider using a process manager like PM2:
-   ```bash
-   npm install -g pm2
-   pm2 start dist/index.js --name nodejs-app
-   ```
-
-## RTK Integration
-
-This repository uses the RTK (Rust Token Killer) tool for token optimization:
-- RTK hooks automatically optimize bash commands to reduce token usage
-- Use `rtk gain` to view token savings analytics
-- Commands are transparently proxied through RTK (e.g., `git status` becomes `rtk git status`)
+- **Browser automation fails to initialize**: Ensure Chromium is installed and accessible. In Docker, this is handled automatically.
+- **Port already in use**: Change the `PORT` environment variable or stop the conflicting service.
+- **Docker build fails**: Ensure Docker daemon is running and you have sufficient privileges.
+- **Kubernetes deployment issues**: Check pod logs with `kubectl logs <pod-name>`
 
 ## Contributing
 
@@ -410,4 +211,17 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - Express.js team for the excellent web framework
 - TypeScript team for type-safe JavaScript
-- Docker team for containerization excellence
+- Puppeteer team for browser automation
+- Docker and Kubernetes teams for containerization excellence
+
+## Starting Your 24x7 Money Making Machine
+
+To begin automated revenue generation:
+
+1. Deploy the application using Docker or Kubernetes
+2. Configure your platform credentials (TikTok, Shopify, etc.) in the browser automation workflows
+3. Define your revenue-generating tasks in the task management system
+4. Start monitoring events and analytics in real-time
+5. Let the system run continuously, adjusting strategies based on performance data
+
+The combination of persistent storage, real-time updates, and browser automation creates a self-optimizing revenue engine that operates around the clock.
