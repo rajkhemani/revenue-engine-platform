@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-docker-example
+  labels:
+    app: nodejs-docker-example
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nodejs-docker-example
+  template:
+    metadata:
+      labels:
+        app: nodejs-docker-example
+    spec:
+      containers:
+      - name: nodejs-docker-example
+        image: nodejs-docker-example:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NODE_ENV
+          value: "production"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodejs-docker-example-service
+spec:
+  selector:
+    app: nodejs-docker-example
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: LoadBalancer
